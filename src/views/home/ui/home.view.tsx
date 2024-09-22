@@ -15,7 +15,6 @@ export const HomeView: FC<HomeViewProps> = ({ studioInfo }) => {
 
 	return (
 		<section>
-			<span>hi</span>
 			<StudioPreview
 				href={'/studio'}
 				info={studioInfo}
