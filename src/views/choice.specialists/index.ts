@@ -1,0 +1,1 @@
+export { ChoiceSpecialistView } from './ui/choice.specialist.view'
