@@ -22,7 +22,11 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'beauty-booking-app-back.loca.lt'
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'mybeautybooking.ru'
+      },
     ],
   },
 
