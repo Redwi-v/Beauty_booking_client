@@ -27,7 +27,10 @@
     z-index: 2;
   }
 
-  .logo { border-radius: 50%; }
+  .logo { 
+    border-radius: 50%;
+    object-fit: cover;
+   }
 
   h1, h3 {
     color: var(--color-white) !important;
@@ -47,6 +50,14 @@
     margin-top: 8px !important;
     font-size: 16px !important;
     font-weight: 400 !important;
+
+  }
+
+  .select_address {
+
+    margin: 0 auto;
+    width: fit-content;
+    margin-top: 8px;
 
   }
 

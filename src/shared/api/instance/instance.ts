@@ -4,20 +4,20 @@ import { Cookies } from 'react-cookie'
 
 export const cookies = new Cookies()
 
+const baseUrl = 'https://beauty-booking-app-back.loca.lt';
 
 export const apiInstance = axios.create({
-  
-  baseURL: 'https://mybeautybooking.ru:8080/api/v1',
-  timeout: 10000,
-  
-})
+	baseURL: baseUrl,
+	timeout: 10000,
+});
 
-apiInstance.interceptors.response.use(( response ) => {
+apiInstance.interceptors.response.use(
+	response => {
+		return response;
+	},
+	(error: AxiosError) => {
+		return Promise.reject(error.response?.data);
+	},
+);
 
-  return response
-
-}, ( error: AxiosError ) => {
-
-  return Promise.reject( error.response?.data );
-
-})
+export const getFileUrl = (fileName: string) => `${baseUrl}/files/${fileName}`; 

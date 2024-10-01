@@ -1,6 +1,8 @@
 @import './variables.scss';
 @import './tailwind.scss';
 @import './text.scss';
+@import '@szhsin/react-menu/dist/index.css';
+@import '@szhsin/react-menu/dist/transitions/zoom.css';
 
 /* СБРОС СТАНДАРТНЫХ СТИЛЕЙ */
 *,

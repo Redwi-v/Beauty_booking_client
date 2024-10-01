@@ -1,0 +1,85 @@
+.booking_list {
+	margin-top: 20px;
+
+	.header {
+		display: flex;
+		gap: 20px;
+		align-items: center;
+		padding-left: 29px;
+
+		h2 {
+			font-weight: 500;
+			font-size: 24px;
+			color: var(--color-grey);
+		}
+	}
+
+	.list {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+	.item {
+		display: flex;
+		align-items: center;
+		width: 100%;
+
+		.time_block {
+			display: flex;
+			flex-direction: column;
+			text-align: center;
+			color: var(--color-stone-400);
+
+			padding: 16px 8px;
+
+			background: var(--color-stone-200);
+			margin-right: 16px;
+		}
+
+		.time {
+			font-weight: 400;
+			font-size: 16px;
+		}
+
+		.duration {
+			font-weight: 400;
+			font-size: 12px;
+			text-align: center;
+		}
+
+		.info {
+			display: flex;
+			flex-direction: column;
+
+			.speciality {
+				font-weight: 400;
+				font-size: 14px;
+				color: var(--color-stone-400);
+			}
+
+			.date {
+				margin-top: 4px;
+				font-weight: 400;
+				font-size: 14px;
+				color: var(--color-stone-400);
+			}
+
+			.name {
+				font-weight: 400;
+				font-size: 18px;
+				line-height: 143%;
+			}
+
+		}
+
+		.menu {
+			margin-left: auto !important;
+			margin-bottom: auto !important;
+
+			.menu_button {
+				background: none;
+				border: none;
+			}
+		}
+	}
+}

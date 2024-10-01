@@ -2,25 +2,26 @@
 
 import { NavigationList } from "@/entities/navigation.list";
 import { IStudioPreviewInfo, StudioPreview } from "@/entities/studio.preview";
+import { salonApi } from '@/shared/api/salon';
+import { BookingList } from '@/widgets/booking.list';
 import WebApp from '@twa-dev/sdk';
 import axios from 'axios';
 import { FC } from 'react';
+import { useQuery } from 'react-query';
 
-interface HomeViewProps {
-	studioInfo: IStudioPreviewInfo;
-}
-
-export const HomeView: FC<HomeViewProps> = ({ studioInfo }) => {
-	console.log(WebApp);
+export const HomeView: FC = () => {
+	const { data } = useQuery({
+		queryKey: ['SalonData'],
+		queryFn: () => salonApi.getSalonById(+WebApp.initDataUnsafe.start_param),
+	});
 
 	return (
 		<section>
-			<StudioPreview
-				href={'/studio'}
-				info={studioInfo}
-			/>
+			<StudioPreview data={data?.data} />
 
 			<NavigationList />
+
+			<BookingList />
 		</section>
 	);
 };

@@ -19,8 +19,13 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'static-00.iconduck.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'beauty-booking-app-back.loca.lt'
+      }
     ],
   },
+
 };
 
 export default nextConfig;
