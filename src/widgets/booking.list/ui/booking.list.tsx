@@ -27,7 +27,15 @@ export const BookingList: FC<IBookingListProps> = props => {
 				<h2>Мои записи</h2>
 			</div>
 
-			<ul className={s.list}>{data && data?.data.map(item => <BookingItem {...item} />)}</ul>
+			<ul className={s.list}>
+				{data &&
+					data?.data.map(item => (
+						<BookingItem
+							key={item.id}
+							{...item}
+						/>
+					))}
+			</ul>
 		</div>
 	);
 };
