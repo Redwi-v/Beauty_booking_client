@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { NavigationList } from "@/entities/navigation.list";
-import { IStudioPreviewInfo, StudioPreview } from "@/entities/studio.preview";
+import { NavigationList } from '@/entities/navigation.list';
+import { IStudioPreviewInfo, StudioPreview } from '@/entities/studio.preview';
 import { salonApi } from '@/shared/api/salon';
 import { BookingList } from '@/widgets/booking.list';
 import WebApp from '@twa-dev/sdk';
 import axios from 'axios';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
 export const HomeView: FC = () => {
@@ -15,14 +15,23 @@ export const HomeView: FC = () => {
 		queryFn: () => salonApi.getSalonById(+WebApp.initDataUnsafe.start_param),
 	});
 
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
+
 	return (
 		<section>
-			<StudioPreview data={data?.data} />
+			{isClient && (
+				<>
+					<StudioPreview data={data?.data} />
 
-			<NavigationList />
+					<NavigationList />
 
-			<BookingList />
+					<BookingList />
+				</>
+			)}
 		</section>
 	);
 };
- 

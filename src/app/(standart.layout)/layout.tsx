@@ -1,23 +1,15 @@
-import { Header } from "@/widgets/header";
+import { Header } from '@/widgets/header';
 
+export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
+	const isClient = typeof window !== 'undefined';
 
-export default function Layout( { children }: Readonly<{ children: React.ReactNode }>) {
+	return (
+		<>
+			<>
+				{isClient && <Header />}
 
-  return (
-
-    <>
-
-      <Header />
-      
-      <main className = "content">
-        
-        { children }
-        
-      </main>
-
-    </>
-
-
-  );
-
+				<main className='content'>{children}</main>
+			</>
+		</>
+	);
 }

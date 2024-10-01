@@ -1,18 +1,13 @@
-import { EntryConfirmView } from "@/views/entry.confirm.view";
-import { NextPage } from "next";
+import { EntryConfirmView } from '@/views/entry.confirm.view';
+import { NextPage } from 'next';
+import { FC } from 'react';
 
-interface EntryConfirmProps {
+interface EntryConfirmProps {}
 
-}
+const EntryConfirm: FC<EntryConfirmProps> = () => {
+	const isClient = typeof window !== 'undefined';
 
-const EntryConfirm: NextPage<EntryConfirmProps> = () => {
-
-  return (
-
-    <EntryConfirmView />
-
-  );
-
-}
+	return <>{isClient && <EntryConfirmView />}</>;
+};
 
 export default EntryConfirm;

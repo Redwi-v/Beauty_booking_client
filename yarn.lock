@@ -89,6 +89,46 @@
   dependencies:
     glob "10.3.10"
 
+"@next/swc-darwin-arm64@14.2.1":
+  version "14.2.1"
+  resolved "https://registry.npmjs.org/@next/swc-darwin-arm64/-/swc-darwin-arm64-14.2.1.tgz"
+  integrity sha512-kGjnjcIJehEcd3rT/3NAATJQndAEELk0J9GmGMXHSC75TMnvpOhONcjNHbjtcWE5HUQnIHy5JVkatrnYm1QhVw==
+
+"@next/swc-darwin-x64@14.2.1":
+  version "14.2.1"
+  resolved "https://registry.npmjs.org/@next/swc-darwin-x64/-/swc-darwin-x64-14.2.1.tgz"
+  integrity sha512-dAdWndgdQi7BK2WSXrx4lae7mYcOYjbHJUhvOUnJjMNYrmYhxbbvJ2xElZpxNxdfA6zkqagIB9He2tQk+l16ew==
+
+"@next/swc-linux-arm64-gnu@14.2.1":
+  version "14.2.1"
+  resolved "https://registry.npmjs.org/@next/swc-linux-arm64-gnu/-/swc-linux-arm64-gnu-14.2.1.tgz"
+  integrity sha512-2ZctfnyFOGvTkoD6L+DtQtO3BfFz4CapoHnyLTXkOxbZkVRgg3TQBUjTD/xKrO1QWeydeo8AWfZRg8539qNKrg==
+
+"@next/swc-linux-arm64-musl@14.2.1":
+  version "14.2.1"
+  resolved "https://registry.npmjs.org/@next/swc-linux-arm64-musl/-/swc-linux-arm64-musl-14.2.1.tgz"
+  integrity sha512-jazZXctiaanemy4r+TPIpFP36t1mMwWCKMsmrTRVChRqE6putyAxZA4PDujx0SnfvZHosjdkx9xIq9BzBB5tWg==
+
+"@next/swc-linux-x64-gnu@14.2.1":
+  version "14.2.1"
+  resolved "https://registry.npmjs.org/@next/swc-linux-x64-gnu/-/swc-linux-x64-gnu-14.2.1.tgz"
+  integrity sha512-VjCHWCjsAzQAAo8lkBOLEIkBZFdfW+Z18qcQ056kL4KpUYc8o59JhLDCBlhg+hINQRgzQ2UPGma2AURGOH0+Qg==
+
+"@next/swc-linux-x64-musl@14.2.1":
+  version "14.2.1"
+  resolved "https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-14.2.1.tgz"
+  integrity sha512-7HZKYKvAp4nAHiHIbY04finRqjeYvkITOGOurP1aLMexIFG/1+oCnqhGogBdc4lao/lkMW1c+AkwWSzSlLasqw==
+
+"@next/swc-win32-arm64-msvc@14.2.1":
+  version "14.2.1"
+  resolved "https://registry.npmjs.org/@next/swc-win32-arm64-msvc/-/swc-win32-arm64-msvc-14.2.1.tgz"
+  integrity sha512-YGHklaJ/Cj/F0Xd8jxgj2p8po4JTCi6H7Z3Yics3xJhm9CPIqtl8erlpK1CLv+HInDqEWfXilqatF8YsLxxA2Q==
+
+"@next/swc-win32-ia32-msvc@14.2.1":
+  version "14.2.1"
+  resolved "https://registry.npmjs.org/@next/swc-win32-ia32-msvc/-/swc-win32-ia32-msvc-14.2.1.tgz"
+  integrity sha512-o+ISKOlvU/L43ZhtAAfCjwIfcwuZstiHVXq/BDsZwGqQE0h/81td95MPHliWCnFoikzWcYqh+hz54ZB2FIT8RA==
+
 "@next/swc-win32-x64-msvc@14.2.1":
   version "14.2.1"
   resolved "https://registry.npmjs.org/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-14.2.1.tgz"
@@ -489,6 +529,7 @@ balanced-match@^1.0.0:
     "@pbe/react-yandex-maps" "^1.2.5"
     "@szhsin/react-menu" "^4.2.2"
     "@twa-dev/sdk" "^7.0.0"
+    "@types/react-input-mask" "^3.0.5"
     axios "^1.6.8"
     beauty_booking "file:"
     clsx "^2.1.0"
