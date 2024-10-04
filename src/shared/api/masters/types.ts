@@ -2,7 +2,7 @@ export interface IGetMastersParams {
 	salonId: number;
 	time?: Date;
 	date?: Date;
-	servicesIdList?: string[];
+	servicesIdList?: number[];
 }
 
 export interface IGetMastersRes {
@@ -82,7 +82,7 @@ export interface MasterService {
 }
 
 export interface IGetFreeTimeParams {
-	date: Date;
-	masterId: number | string;
-	servicesIdList: string[];
+	date?: Date;
+	masterId?: number | string;
+	servicesIdList?: string[];
 }

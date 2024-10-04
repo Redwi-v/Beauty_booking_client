@@ -3,7 +3,7 @@ import { ClockIcon, DotsIcon } from '@/shared/icons';
 import s from './booking.module.scss';
 
 import { FC } from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { bookingApi } from '@/shared/api';
 import WebApp from '@twa-dev/sdk';
 import { IGetBookingListRes } from '@/shared/api/booking/types';
@@ -15,9 +15,16 @@ interface IBookingListProps {}
 export const BookingList: FC<IBookingListProps> = props => {
 	const {} = props;
 
-	const { data } = useQuery({
+	const { data, refetch } = useQuery({
 		queryKey: ['BookingList'],
 		queryFn: () => bookingApi.getListById(WebApp.initDataUnsafe.user.id),
+	});
+
+	const deleteItemMutation = useMutation({
+		mutationFn: (id: number) => bookingApi.delete(id),
+		onSuccess: () => {
+			refetch();
+		},
 	});
 
 	return (
@@ -32,6 +39,7 @@ export const BookingList: FC<IBookingListProps> = props => {
 					data?.data.map(item => (
 						<BookingItem
 							key={item.id}
+							deleteItem={deleteItemMutation.mutate}
 							{...item}
 						/>
 					))}
@@ -40,8 +48,8 @@ export const BookingList: FC<IBookingListProps> = props => {
 	);
 };
 
-const BookingItem: FC<IGetBookingListRes> = props => {
-	const { master, time, services } = props;
+const BookingItem: FC<IGetBookingListRes & { deleteItem: (id: number) => void }> = props => {
+	const { master, time, services, id, deleteItem } = props;
 
 	return (
 		<li className={s.item}>
@@ -73,8 +81,13 @@ const BookingItem: FC<IGetBookingListRes> = props => {
 						</button>
 					}
 				>
-					<MenuItem>Отменить запись</MenuItem>
-					<MenuItem>Изменить время</MenuItem>
+					<MenuItem
+						onClick={() => {
+							deleteItem(id);
+						}}
+					>
+						Отменить запись
+					</MenuItem>
 				</Menu>
 				{/* <div className={s.actions}>
 					<button>Отменить заказ</button>

@@ -6,6 +6,7 @@ export const mastersApi = {
 		return apiInstance.get<IGetMastersRes>('/master', { params: { ...params, search: '' } });
 	},
 
+
 	async getFreeTime(params: IGetFreeTimeParams) {
 		return apiInstance.get<{ freeTime: string[] }>('/master/time/freeTime', { params });
 	},

@@ -4,6 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev -p 5173 --turbo",
+		"dev_tg": "nodemon",
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint"
@@ -16,6 +17,8 @@
 		"axios": "^1.6.8",
 		"beauty_booking": "file:",
 		"clsx": "^2.1.0",
+		"express": "^4.21.0",
+		"http": "^0.0.1-security",
 		"moment": "^2.30.1",
 		"next": "14.2.1",
 		"react": "^18",
@@ -24,6 +27,7 @@
 		"react-hook-form": "^7.53.0",
 		"react-input-mask": "^3.0.0-alpha.2",
 		"react-query": "^3.39.3",
+		"url": "^0.11.4",
 		"zukeeper": "^1.0.2",
 		"zustand": "^4.5.2"
 	},

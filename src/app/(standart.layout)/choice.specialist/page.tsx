@@ -1,3 +1,4 @@
+'use client';
 import { ChoiceSpecialistView } from '@/views/choice.specialists';
 import { NextPage } from 'next';
 

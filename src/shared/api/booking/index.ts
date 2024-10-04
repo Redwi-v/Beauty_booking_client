@@ -9,4 +9,8 @@ export const bookingApi = {
 	create(data: ICreateBookingData) {
 		return apiInstance.post('/booking', data);
 	},
+
+	delete(id: number) {
+		return apiInstance.delete(`/booking/${id}`);
+	},
 };

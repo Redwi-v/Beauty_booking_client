@@ -46,6 +46,7 @@ export const ChooseDateView: FC<ChooseDateViewProps> = () => {
 	const { data: activeMaster } = useQuery({
 		queryKey: ['activeMaster', masterId],
 		queryFn: () => mastersApi.getOne(masterId),
+		enabled: !!masterId,
 	});
 
 	useEffect(() => {

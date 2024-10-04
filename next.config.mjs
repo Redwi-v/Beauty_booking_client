@@ -20,8 +20,8 @@ const nextConfig = {
         hostname: 'static-00.iconduck.com',
       },
       {
-        protocol: 'https',
-        hostname: 'beauty-booking-app-back.loca.lt'
+        protocol: 'http',
+        hostname: '192.168.225.98'
       },
       {
         protocol: 'https',

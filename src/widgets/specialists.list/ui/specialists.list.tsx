@@ -1,17 +1,18 @@
-'use client'
-import { FC, useState } from "react";
-import s from './specialists.list.module.scss'
-import Image from "next/image";
-import Link from "next/link";
-import { CheckBox } from "@/shared/ui/checkbox";
-import { Controls } from "@/widgets/controls";
-import { useAppointmentStore } from "@/features/appointment/model/appointment.store";
-import { useRouter } from "next/navigation";
-import { Button, buttonTypes } from "@/shared/ui";
+'use client';
+import { FC, useState } from 'react';
+import s from './specialists.list.module.scss';
+import Image from 'next/image';
+import Link from 'next/link';
+import { CheckBox } from '@/shared/ui/checkbox';
+import { Controls } from '@/widgets/controls';
+import { useAppointmentStore } from '@/features/appointment/model/appointment.store';
+import { useRouter } from 'next/navigation';
+import { Button, buttonTypes } from '@/shared/ui';
 import WebApp from '@twa-dev/sdk';
 import { useQuery } from 'react-query';
 import { mastersApi } from '@/shared/api/masters';
 import { getFileUrl } from '@/shared/api/instance/instance';
+import moment from 'moment';
 
 interface SpecialistsListProps {}
 
@@ -21,7 +22,14 @@ export const SpecialistsList: FC<SpecialistsListProps> = () => {
 	const router = useRouter();
 
 	const { data } = useQuery({
-		queryFn: () => mastersApi.getList({ salonId: +WebApp.initDataUnsafe.start_param }),
+		queryKey: ['masters', date, time, masterId, services],
+		queryFn: () =>
+			mastersApi.getList({
+				salonId: +WebApp.initDataUnsafe.start_param,
+				date: date ? new Date(date) : undefined,
+				servicesIdList: services,
+				time: time && moment().hours(+time.split(':')[0]).minutes(+time.split(':')[1]).toDate(),
+			}),
 	});
 
 	const clickHandler = () => {
@@ -76,7 +84,7 @@ export const SpecialistsList: FC<SpecialistsListProps> = () => {
 									<Link
 										onClick={e => e.stopPropagation()}
 										className={s.link}
-										href={'/specialist'}
+										href={`/specialist/${item.id}`}
 									>
 										{' '}
 										i{' '}
