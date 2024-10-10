@@ -14,6 +14,7 @@ import moment from 'moment';
 import useDebounce from '@/shared/scripts/hooks/use.debounce';
 import { mastersApi } from '@/shared/api/masters';
 import { Service } from '@/shared/api/booking/types';
+import { Rethink_Sans } from 'next/font/google';
 
 interface ChoiceServiceViewProps {}
 
@@ -110,12 +111,12 @@ const ListWithTabs = () => {
 		refetch();
 	}, [isSearch]);
 
-	const isValid = (service: Service): boolean => {
+	const isNotValid = (service: Service): boolean => {
 		if (!data?.data || !masterData?.data) return;
 
 		if (!date) return false;
 
-		let haveFreeTime = true;
+		let haveFreeTime = false;
 
 		const maxWorkingTime =
 			+moment(masterData.data.endShift).format('HH:mm').split(':')[0] * 60 +
@@ -165,9 +166,10 @@ const ListWithTabs = () => {
 			});
 		});
 
+		console.log(haveFreeTime);
+
 		return haveFreeTime;
 	};
-
 
 	const onlyTabs = data?.data?.list && data.data.list.map(service => ({ tab: service.tagName }));
 
@@ -227,7 +229,7 @@ const ListWithTabs = () => {
 								{item.services.map((service, index) => (
 									<li
 										className={`${s.item} ${
-											isValid(service) && !services.includes(service.id) && s.disable_item
+											isNotValid(service) && !services.includes(service.id) && s.disable_item
 										}`}
 										key={index}
 									>
