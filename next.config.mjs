@@ -1,6 +1,19 @@
 /** @type {import('next').NextConfig} */
+
+const envConfig = {
+  API_URL: 'https://api.mybeautybooking.ru'
+
+
+  // # dev
+
+  // API_URL: "http://localhost:8888",
+}
+
 const nextConfig = {
   reactStrictMode: false,
+  env: {
+    ...envConfig
+  },
   images: {
     remotePatterns: [
       {
@@ -21,7 +34,7 @@ const nextConfig = {
       },
       {
         protocol: 'http',
-        hostname: '192.168.225.98'
+        hostname: 'localhost'
       },
       {
         protocol: 'https',

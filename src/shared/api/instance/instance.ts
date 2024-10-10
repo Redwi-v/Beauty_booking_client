@@ -4,8 +4,7 @@ import { Cookies } from 'react-cookie'
 
 export const cookies = new Cookies()
 
-const baseUrl = 'https://api.mybeautybooking.ru';
-// const baseUrl = 'http://192.168.225.98:8888';
+const baseUrl = process.env.API_URL;
 
 export const apiInstance = axios.create({
 	baseURL: baseUrl,

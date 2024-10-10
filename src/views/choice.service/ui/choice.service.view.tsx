@@ -84,6 +84,7 @@ const ListWithTabs = () => {
 	const { data: masterData } = useQuery({
 		queryKey: ['MasterData', masterId],
 		queryFn: () => mastersApi.getOne(masterId),
+		enabled: !!masterId,
 	});
 
 	const { data, refetch } = useQuery({
@@ -101,10 +102,7 @@ const ListWithTabs = () => {
 		),
 	);
 
-	console.log(time);
-	console.log('INfo');
-
-	const startMinutes = +time.split(':')[0] * 60 + +time.split(':')[1];
+	const startMinutes = +time?.split(':')[0] * 60 + +time?.split(':')[1];
 
 	const isSearch = useDebounce(search, 1000);
 
@@ -114,10 +112,14 @@ const ListWithTabs = () => {
 
 	const isValid = (service: Service): boolean => {
 		if (!data?.data || !masterData?.data) return;
+
+		if (!date) return false;
+
 		let haveFreeTime = true;
 
 		const maxWorkingTime =
-			+masterData.data.endShift.split(':')[0] * 60 + +masterData.data.endShift.split(':')[1];
+			+moment(masterData.data.endShift).format('HH:mm').split(':')[0] * 60 +
+			+moment(masterData.data.startShift).format('HH:mm').split(':')[1];
 
 		let bookingEndTimeSteps: [number, number][] = [];
 
@@ -150,13 +152,8 @@ const ListWithTabs = () => {
 				if (plusOneMinutes > maxWorkingTime) {
 					haveFreeTime = false;
 				}
-				console.log(startMinutes);
-				console.log('endMinutes');
-				console.log(plusOneMinutes);
 
 				bookingEndTimeSteps.forEach(bookingTimeStep => {
-					console.log('bookingTimeStep');
-					console.log(bookingTimeStep);
 					if (
 						(plusOneMinutes >= bookingTimeStep[0] && plusOneMinutes <= bookingTimeStep[1]) ||
 						(startMinutes <= bookingTimeStep[0] && plusOneMinutes >= bookingTimeStep[0])
@@ -170,6 +167,7 @@ const ListWithTabs = () => {
 
 		return haveFreeTime;
 	};
+
 
 	const onlyTabs = data?.data?.list && data.data.list.map(service => ({ tab: service.tagName }));
 

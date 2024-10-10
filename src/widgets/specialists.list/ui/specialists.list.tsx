@@ -33,8 +33,11 @@ export const SpecialistsList: FC<SpecialistsListProps> = () => {
 	});
 
 	const clickHandler = () => {
+		if (!masterId) setMasterId(data.data.masters[0].id);
+
 		if (services.length === 0) return router.push('/choice.service');
 		if (!time && !date && services.length !== 0) return router.push('/choice.date');
+
 		router.push('/entry.confirm');
 	};
 
@@ -149,8 +152,7 @@ export const SpecialistsList: FC<SpecialistsListProps> = () => {
 						}}
 						type={buttonTypes.blue}
 					>
-						{' '}
-						Оформить запись{' '}
+						Оформить запись
 					</Button>
 				) : (
 					<>
@@ -159,19 +161,19 @@ export const SpecialistsList: FC<SpecialistsListProps> = () => {
 								onClick: () => router.back(),
 							}}
 						>
-							{' '}
-							Назад{' '}
+							Назад
 						</Button>
 
-						<Button
-							buttonParams={{
-								onClick: clickHandler,
-							}}
-							type={buttonTypes.blue}
-						>
-							{' '}
-							Далее{' '}
-						</Button>
+						{data?.data.masters.length !== 0 && (
+							<Button
+								buttonParams={{
+									onClick: clickHandler,
+								}}
+								type={buttonTypes.blue}
+							>
+								Далее
+							</Button>
+						)}
 					</>
 				)}
 			</Controls>
