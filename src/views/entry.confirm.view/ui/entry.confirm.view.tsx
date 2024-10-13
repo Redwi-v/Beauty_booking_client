@@ -39,6 +39,7 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 	const { data: activeMaster } = useQuery({
 		queryKey: ['activeMaster', masterId],
 		queryFn: () => mastersApi.getOne(masterId),
+		enabled: !!masterId,
 	});
 
 	const { data: servicesData } = useQuery({
@@ -89,7 +90,6 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 	const totalMinutes = selectedServices.reduce((value, service) => {
 		return (value += service.time);
 	}, 0);
-	console.log(totalMinutes);
 
 	return (
 		<div className={`${s.wrapper}`}>

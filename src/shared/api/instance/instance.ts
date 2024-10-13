@@ -20,4 +20,4 @@ apiInstance.interceptors.response.use(
 	},
 );
 
-export const getFileUrl = (fileName: string) => `${baseUrl}/files/${fileName}`; 
+export const getFileUrl = (fileName: string) => (fileName ? `${baseUrl}/files/${fileName}` : ''); 
