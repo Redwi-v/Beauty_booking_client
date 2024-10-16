@@ -3,7 +3,6 @@ import s from './studio.preview.module.scss';
 import Link from 'next/link';
 import type { IStudioPreviewInfo } from '../types/types';
 import Image from 'next/image';
-import WebApp from '@twa-dev/sdk';
 import { IGetSalonRes } from '@/shared/api/salon/types';
 import { getFileUrl } from '@/shared/api/instance/instance';
 import Select from '@/shared/ui/select/ui/select';

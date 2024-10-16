@@ -60,10 +60,10 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 			clientComment: data.clientComment,
 			clientName: data.clientName,
 			clientPhone: data.clientPhone,
-			clientTelegramId: String(WebApp.initDataUnsafe.user.id),
+			clientTelegramId: String(typeof window !== 'undefined' && WebApp.initDataUnsafe.user.id),
 			masterId,
 			salonBranchId: branch.id,
-			salonId: +WebApp.initDataUnsafe.start_param,
+			salonId: typeof window !== 'undefined' && +WebApp.initDataUnsafe.start_param,
 			servicesIdArray: services,
 			time: moment(date).hours(+time.split(':')[0]).minutes(+time.split(':')[1]).toDate(),
 		};

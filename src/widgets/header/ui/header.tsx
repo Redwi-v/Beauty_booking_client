@@ -19,7 +19,8 @@ export const Header: FC<HeaderProps> = ({ withBack }) => {
 
 	const { data } = useQuery({
 		queryKey: ['SalonData'],
-		queryFn: () => salonApi.getSalonById(+WebApp.initDataUnsafe.start_param),
+		queryFn: () =>
+			salonApi.getSalonById(typeof window !== 'undefined' && +WebApp.initDataUnsafe.start_param),
 	});
 
 	const branch = useAppointmentStore(store => store.branch);

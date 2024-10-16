@@ -8,7 +8,7 @@ import { bookingApi } from '@/shared/api';
 import WebApp from '@twa-dev/sdk';
 import { IGetBookingListRes } from '@/shared/api/booking/types';
 import moment from 'moment';
-import { Menu, MenuItem, SubMenu } from '@szhsin/react-menu';
+import { Menu, MenuItem } from '@szhsin/react-menu';
 moment.locale('ru');
 interface IBookingListProps {}
 
@@ -17,7 +17,8 @@ export const BookingList: FC<IBookingListProps> = props => {
 
 	const { data, refetch } = useQuery({
 		queryKey: ['BookingList'],
-		queryFn: () => bookingApi.getListById(WebApp.initDataUnsafe.user.id),
+		queryFn: () =>
+			bookingApi.getListById(typeof window !== 'undefined' && WebApp.initDataUnsafe.user.id),
 	});
 
 	const deleteItemMutation = useMutation({

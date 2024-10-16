@@ -25,7 +25,7 @@ export const SpecialistsList: FC<SpecialistsListProps> = () => {
 		queryKey: ['masters', date, time, masterId, services],
 		queryFn: () =>
 			mastersApi.getList({
-				salonId: +WebApp.initDataUnsafe.start_param,
+				salonId: typeof window !== 'undefined' && +WebApp.initDataUnsafe.start_param,
 				date: date ? new Date(date) : undefined,
 				servicesIdList: services,
 				time: time && moment().hours(+time.split(':')[0]).minutes(+time.split(':')[1]).toDate(),
