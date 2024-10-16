@@ -40,6 +40,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'beauty-back.ru.tuna.am'
       },
+
+      {
+        protocol: 'https',
+        hostname: 'api.mybeautybooking.ru'
+      },
     ],
   },
 
