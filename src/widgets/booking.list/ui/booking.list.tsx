@@ -9,25 +9,21 @@ import { IGetBookingListRes } from '@/shared/api/booking/types';
 import moment from 'moment';
 import { Menu, MenuItem } from '@szhsin/react-menu';
 import { UserApi } from '@/shared/api/user';
+import 'moment/locale/ru';
 moment.locale('ru');
 interface IBookingListProps {}
 
 export const BookingList: FC<IBookingListProps> = props => {
 	const {} = props;
 
-	const { data: user, isFetching } = useQuery({
-		queryFn: () => UserApi.getSession(),
-		queryKey: ['SESSION'],
-		retry: false,
-	});
-
 	const { data, refetch } = useQuery({
 		queryKey: ['BookingList'],
 		queryFn: () =>
-			//FIXME: id
-			bookingApi.getListById(user?.data?.id),
-
-		enabled: !!user?.data?.id,
+			bookingApi.getAllById(
+				window.localStorage.getItem('BOOKING')
+					? JSON.parse(window.localStorage.getItem('BOOKING'))
+					: [],
+			),
 	});
 
 	const deleteItemMutation = useMutation({
@@ -80,10 +76,10 @@ const BookingItem: FC<IGetBookingListRes & { deleteItem: (id: number) => void }>
 				<span className={s.name}>
 					{master?.name} {master?.lastName}
 				</span>
-				<span className={s.date}>{moment(time).format('DD MMMM YYYY (dd)')}</span>
+				<span className={s.date}>{moment(time).locale('ru').format('DD MMMM YYYY (dd)')}</span>
 			</div>
 
-			<div className={s.menu}>
+			{/* <div className={s.menu}>
 				<Menu
 					menuButton={
 						<button className={s.menu_button}>
@@ -99,11 +95,8 @@ const BookingItem: FC<IGetBookingListRes & { deleteItem: (id: number) => void }>
 						Отменить запись
 					</MenuItem>
 				</Menu>
-				{/* <div className={s.actions}>
-					<button>Отменить заказ</button>
-					<button>Изменить бронь</button>
-				</div> */}
-			</div>
+
+			</div> */}
 		</li>
 	);
 };

@@ -53,7 +53,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 					<ReactNotifications />
 				</section>
 				<QueryClientProvider client={queryClient}>
-					<main className='content'>{children}</main>
+					<main className='content container'>{children}</main>
 				</QueryClientProvider>
 			</body>
 		</html>

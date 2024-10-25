@@ -73,7 +73,6 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 			masterId,
 			salonBranchId: branch.id,
 			salonId: +salonId,
-			clientId: profileData.data.id,
 			servicesIdArray: services,
 			time: moment(date).hours(+time.split(':')[0]).minutes(+time.split(':')[1]).toDate(),
 		};
@@ -83,9 +82,12 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 
 	const createBookingMutation = useMutation({
 		mutationFn: (data: ICreateBookingData) => bookingApi.create(data),
-		onSuccess: () => {
+		onSuccess: booking => {
 			clear();
 			router.push('/' + salonId);
+
+			const bookingArray = JSON.parse(window.localStorage.getItem('BOOKING')) || [];
+			window.localStorage.setItem('BOOKING', JSON.stringify([...bookingArray, booking.data.id]));
 		},
 		onError: (error: any) => {
 			Store.addNotification({

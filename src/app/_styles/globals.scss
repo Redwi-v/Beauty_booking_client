@@ -40,12 +40,16 @@ html {
 	background: var(--color-white) !important;
 
 	font-family: var(--font-roboto);
+
+	scrollbar-width: none;
+
 }
 
 .container {
 	max-width: 600px;
 	margin: 0 auto;
-	padding: 0 15px;
+	padding: 0 15px !important;
+
 }
 
 body,

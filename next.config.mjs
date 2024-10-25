@@ -1,12 +1,13 @@
 /** @type {import('next').NextConfig} */
 
 const envConfig = {
-  API_URL: 'https://api.mybeautybooking.ru'
 
+  API_URL: 'https://api.mybeautybooking.ru'
 
   // # dev
 
   // API_URL: "http://localhost:8888",
+  // API_URL: "https://beauty-back.ru.tuna.am",
 }
 
 const nextConfig = {

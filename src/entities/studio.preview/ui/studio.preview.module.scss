@@ -7,7 +7,6 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: bottom;
-  background-position-y: -1px;
   padding-top: 23px;
 
   &::after {
@@ -18,7 +17,7 @@
     right: 0;
     bottom: 0;
     top: 0;
-    height: 201px;
+    height: 203px;
     z-index: 1;
     background: var(--color-blue);
 
