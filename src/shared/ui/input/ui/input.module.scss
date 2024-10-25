@@ -1,0 +1,39 @@
+.content {
+  input {
+
+    width: 100%;
+    background: none;
+    box-shadow: 0 0px 2px 0 rgba(77, 64, 85, 0.417);
+    border-radius: 4px;
+    padding: 15px 16px;
+    border: none;
+    font-size: 16px !important;
+  
+    font-family: var(--font-sf_pro_text);
+    font-weight: 400;
+  
+  }
+
+  .form_title {
+
+    display: inline-block;
+    margin-top: 16px;
+    margin-bottom: 4px;
+    position: relative;
+    font-family: var(--font-sf_pro_text);
+    font-weight: 400;
+    font-size: 14px;
+
+  }
+
+  .form_title.required::after {
+
+    content: '*';
+    color: var(--color-red);
+
+    right: -10px;
+    position: absolute;
+
+  }
+
+} 

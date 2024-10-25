@@ -2,9 +2,9 @@
 import { Inter, Roboto } from 'next/font/google';
 import './_styles/globals.scss';
 import localFont from 'next/font/local';
-import Script from 'next/script';
-import { ClientRoot } from '@/widgets/client.root';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactNotifications } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
 
 const roboto = Roboto({
 	subsets: ['latin'],
@@ -37,19 +37,25 @@ const myFont = localFont({
 	],
 });
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: false,
+		},
+	},
+});
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang='ru'>
 			<body className={`${roboto.variable} ${myFont.variable}`}>
+				<section>
+					<ReactNotifications />
+				</section>
 				<QueryClientProvider client={queryClient}>
 					<main className='content'>{children}</main>
 				</QueryClientProvider>
 			</body>
-
-			<ClientRoot />
-			<Script src='https://telegram.org/js/telegram-web-app.js'></Script>
 		</html>
 	);
 }

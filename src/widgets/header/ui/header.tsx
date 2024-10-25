@@ -3,10 +3,9 @@
 import { FC } from "react";
 import s from './header.module.scss'
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from 'react-query';
 import { salonApi } from '@/shared/api/salon';
-import WebApp from '@twa-dev/sdk';
 import { getFileUrl } from '@/shared/api/instance/instance';
 import { useAppointmentStore } from '@/features/appointment/model/appointment.store';
 
@@ -17,10 +16,11 @@ interface HeaderProps {
 export const Header: FC<HeaderProps> = ({ withBack }) => {
 	const router = useRouter();
 
+	const { salonId } = useParams();
+
 	const { data } = useQuery({
 		queryKey: ['SalonData'],
-		queryFn: () =>
-			salonApi.getSalonById(typeof window !== 'undefined' && +WebApp.initDataUnsafe.start_param),
+		queryFn: () => salonApi.getSalonById(+salonId),
 	});
 
 	const branch = useAppointmentStore(store => store.branch);

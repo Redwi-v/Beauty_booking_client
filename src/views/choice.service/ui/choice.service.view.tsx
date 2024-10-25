@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { Controls } from '@/widgets/controls';
 import { CheckBox } from '@/shared/ui/checkbox';
 import { useAppointmentStore } from '@/features/appointment/model/appointment.store';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from 'react-query';
 import { servicesApi } from '@/shared/api/services';
 import moment from 'moment';
@@ -23,11 +23,13 @@ export const ChoiceServiceView: FC<ChoiceServiceViewProps> = () => {
 
 	const router = useRouter();
 
-	const clickHandler = () => {
-		if (!masterId) return router.push('/choice.specialist');
-		if (!time && !date && masterId) return router.push('/choice.date');
+	const { salonId } = useParams();
 
-		router.push('/entry.confirm');
+	const clickHandler = () => {
+		if (!masterId) return router.push('choice.specialist');
+		if (!time && !date && masterId) return router.push('choice.date');
+
+		router.push('entry.confirm');
 	};
 
 	const isEndStep = date && time && masterId;

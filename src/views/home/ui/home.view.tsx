@@ -3,34 +3,32 @@ import { NavigationList } from '@/entities/navigation.list';
 import { StudioPreview } from '@/entities/studio.preview';
 import { salonApi } from '@/shared/api/salon';
 import { BookingList } from '@/widgets/booking.list';
-import WebApp from '@twa-dev/sdk';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { useQuery } from 'react-query';
+import { error } from 'console';
+import { useRouter } from 'next/navigation';
 
-export const HomeView: FC = () => {
-	const { data } = useQuery({
+export const HomeView: FC<{ salonId: string }> = ({ salonId }) => {
+	const router = useRouter();
+	const { data, error } = useQuery({
 		queryKey: ['SalonData'],
-		queryFn: () =>
-			salonApi.getSalonById(typeof window !== 'undefined' && +WebApp.initDataUnsafe.start_param),
+		queryFn: () => salonApi.getSalonById(+salonId),
+		enabled: !!salonId,
+		retry: false,
+		onError: (error: { statusCode: number }) => {
+			if (error.statusCode === 403) {
+				router.push('/salonDisabled');
+			}
+		},
 	});
-
-	const [isClient, setIsClient] = useState(false);
-
-	useEffect(() => {
-		setIsClient(true);
-	}, []);
 
 	return (
 		<section>
-			{isClient && (
-				<>
-					<StudioPreview data={data?.data} />
+			<StudioPreview data={data?.data} />
 
-					<NavigationList />
+			<NavigationList />
 
-					<BookingList />
-				</>
-			)}
+			<BookingList />
 		</section>
 	);
 };

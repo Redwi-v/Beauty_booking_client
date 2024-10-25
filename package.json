@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev -p 3002 --turbo",
+		"dev": "next dev -p 3002",
 		"dev_tg": "nodemon",
 		"build": "next build",
 		"start": "next start -p 3002",
@@ -26,6 +26,7 @@
 		"react-dom": "^18",
 		"react-hook-form": "^7.53.0",
 		"react-input-mask": "^3.0.0-alpha.2",
+		"react-notifications-component": "^4.0.1",
 		"react-query": "^3.39.3",
 		"url": "^0.11.4",
 		"zukeeper": "^1.0.2",

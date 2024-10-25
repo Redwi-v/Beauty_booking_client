@@ -83,6 +83,11 @@ a:visited {
 	font-family: inherit !important;
 }
 
+
+.content {
+	max-width: 550px;
+	margin: 0 auto;
+}
 button {
 	cursor: pointer;
 }
@@ -141,7 +146,7 @@ button {
 	grid-template-rows: repeat(7, 1fr);
 	grid-template-columns: repeat(7, 1fr);
 	width: 100%;
-	height: 90vw;
+	height: 100%;
 
 	color: var(--color-stone-400);
 }
@@ -168,6 +173,7 @@ button {
 	align-items: center;
 	cursor: pointer;
 	border-radius: 4px;
+	height: 70px;
 }
 
 .CalendarPanelItem--today div {

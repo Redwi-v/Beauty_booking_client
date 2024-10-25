@@ -6,9 +6,8 @@ import Link from 'next/link';
 import { CheckBox } from '@/shared/ui/checkbox';
 import { Controls } from '@/widgets/controls';
 import { useAppointmentStore } from '@/features/appointment/model/appointment.store';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Button, buttonTypes } from '@/shared/ui';
-import WebApp from '@twa-dev/sdk';
 import { useQuery } from 'react-query';
 import { mastersApi } from '@/shared/api/masters';
 import { getFileUrl } from '@/shared/api/instance/instance';
@@ -17,17 +16,22 @@ import moment from 'moment';
 interface SpecialistsListProps {}
 
 export const SpecialistsList: FC<SpecialistsListProps> = () => {
-	const { setMasterId, date, time, masterId, services } = useAppointmentStore(state => state);
+	const { setMasterId, date, time, masterId, services, branch } = useAppointmentStore(
+		state => state,
+	);
 
 	const router = useRouter();
+
+	const { salonId } = useParams();
 
 	const { data } = useQuery({
 		queryKey: ['masters', date, time, masterId, services],
 		queryFn: () =>
 			mastersApi.getList({
-				salonId: typeof window !== 'undefined' && +WebApp.initDataUnsafe.start_param,
+				salonId: +salonId,
 				date: date ? new Date(date) : undefined,
 				servicesIdList: services,
+				branchId: branch?.id,
 				time: time && moment().hours(+time.split(':')[0]).minutes(+time.split(':')[1]).toDate(),
 			}),
 	});
@@ -35,10 +39,10 @@ export const SpecialistsList: FC<SpecialistsListProps> = () => {
 	const clickHandler = () => {
 		if (!masterId) setMasterId(data.data.masters[0].id);
 
-		if (services.length === 0) return router.push('/choice.service');
-		if (!time && !date && services.length !== 0) return router.push('/choice.date');
+		if (services.length === 0) return router.push('choice.service');
+		if (!time && !date && services.length !== 0) return router.push('choice.date');
 
-		router.push('/entry.confirm');
+		router.push('entry.confirm');
 	};
 
 	const isEndStep = date && time && services.length !== 0;
@@ -70,6 +74,7 @@ export const SpecialistsList: FC<SpecialistsListProps> = () => {
 						<li
 							className={`${s.item} flex gap-20`}
 							key={index}
+							onClick={() => setMasterId(item.id)}
 						>
 							<Image
 								className={s.avatar}

@@ -7,7 +7,8 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: bottom;
-  padding-top: 24px;
+  background-position-y: -1px;
+  padding-top: 23px;
 
   &::after {
     content: '';

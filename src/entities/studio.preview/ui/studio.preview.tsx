@@ -24,10 +24,12 @@ export const StudioPreview: FC<StudioPreviewProps> = props => {
 		  }))
 		: [];
 
-	useEffect(() => {
-		if (!data || branch) return;
-		setSalonBranch(data.branches[0]);
-	}, [data]);
+		console.log(data);
+
+		useEffect(() => {
+			if (!data?.branches || branch) return;
+			setSalonBranch(data.branches[0]);
+		}, [data]);
 
 	return (
 		<div className={`${s.link} flex flex-col items-center`}>

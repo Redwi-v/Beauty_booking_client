@@ -4,7 +4,7 @@ import { Controls } from "@/widgets/controls";
 import { FC, useEffect, useState } from "react";
 import moment from "moment";
 import { useAppointmentStore } from "@/features/appointment/model/appointment.store";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from 'react-query';
 import { mastersApi } from '@/shared/api/masters';
 
@@ -43,6 +43,8 @@ export const ChooseDateView: FC<ChooseDateViewProps> = () => {
 			}),
 	});
 
+	const { salonId } = useParams();
+
 	const { data: activeMaster } = useQuery({
 		queryKey: ['activeMaster', masterId],
 		queryFn: () => mastersApi.getOne(masterId),
@@ -57,10 +59,10 @@ export const ChooseDateView: FC<ChooseDateViewProps> = () => {
 	const clickHandler = () => {
 		setDateAndTime(moment(date).format(), time);
 
-		if (!masterId) return router.push('/choice.specialist');
-		if (services.length === 0 && masterId) return router.push('/choice.service');
+		if (!masterId) return router.push('choice.specialist');
+		if (services.length === 0 && masterId) return router.push('choice.service');
 
-		router.push('/entry.confirm');
+		router.push('entry.confirm');
 	};
 
 	const isEndStep = !!masterId && services.length !== 0;

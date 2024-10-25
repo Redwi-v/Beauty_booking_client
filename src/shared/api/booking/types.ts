@@ -69,6 +69,7 @@ export interface ICreateBookingData {
 	masterId: number;
 	salonBranchId: number;
 	salonId: number;
+	clientId?: number;
 	clientComment: string;
 	clientPhone: string;
 	clientName: string;

@@ -3,11 +3,11 @@
   display: flex;
   gap: 14px;
 
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 10000;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 10000 !important;
 
   
   background: var(--color-white);

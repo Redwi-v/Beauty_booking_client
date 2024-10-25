@@ -5,20 +5,29 @@ import s from './booking.module.scss';
 import { FC } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { bookingApi } from '@/shared/api';
-import WebApp from '@twa-dev/sdk';
 import { IGetBookingListRes } from '@/shared/api/booking/types';
 import moment from 'moment';
 import { Menu, MenuItem } from '@szhsin/react-menu';
+import { UserApi } from '@/shared/api/user';
 moment.locale('ru');
 interface IBookingListProps {}
 
 export const BookingList: FC<IBookingListProps> = props => {
 	const {} = props;
 
+	const { data: user, isFetching } = useQuery({
+		queryFn: () => UserApi.getSession(),
+		queryKey: ['SESSION'],
+		retry: false,
+	});
+
 	const { data, refetch } = useQuery({
 		queryKey: ['BookingList'],
 		queryFn: () =>
-			bookingApi.getListById(typeof window !== 'undefined' && WebApp.initDataUnsafe.user.id),
+			//FIXME: id
+			bookingApi.getListById(user?.data?.id),
+
+		enabled: !!user?.data?.id,
 	});
 
 	const deleteItemMutation = useMutation({

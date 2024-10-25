@@ -1,5 +1,6 @@
 export interface IGetMastersParams {
 	salonId: number;
+	branchId: number;
 	time?: Date;
 	date?: Date;
 	servicesIdList?: number[];

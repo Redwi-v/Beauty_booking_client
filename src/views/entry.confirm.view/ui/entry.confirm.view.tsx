@@ -1,12 +1,10 @@
 'use client';
 import { Header } from '@/widgets/header';
-import { DetailedHTMLProps, FC, InputHTMLAttributes, useState } from 'react';
+import { FC, useState } from 'react';
 import s from './entry.confirm.view.module.scss';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Controls } from '@/widgets/controls';
-import buttonStyles from '@/widgets/controls/ui/controls.module.scss';
 import { Button, buttonTypes } from '@/shared/ui';
 import { useAppointmentStore } from '@/features/appointment/model/appointment.store';
 import moment from 'moment';
@@ -18,8 +16,10 @@ import { servicesApi } from '@/shared/api/services';
 import { ICreateBookingData, Service } from '@/shared/api/booking/types';
 import { SubmitHandler, useForm, UseFormRegisterReturn } from 'react-hook-form';
 import { bookingApi } from '@/shared/api';
-import WebApp from '@twa-dev/sdk';
 import ReactInputMask from 'react-input-mask';
+import { Store } from 'react-notifications-component';
+import { Input } from '@/shared/ui/input/ui';
+import { UserApi } from '@/shared/api/user';
 moment.locale('ru');
 
 interface IEntryConfirmViewProps {}
@@ -34,6 +34,9 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 	const {} = props;
 
 	const router = useRouter();
+
+	const { salonId } = useParams();
+
 	const { clear, date, masterId, services, time, branch } = useAppointmentStore(state => state);
 
 	const { data: activeMaster } = useQuery({
@@ -45,6 +48,11 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 	const { data: servicesData } = useQuery({
 		queryKey: ['Services'],
 		queryFn: () => servicesApi.getList(),
+	});
+
+	const { data: profileData } = useQuery({
+		queryKey: ['SESSION'],
+		queryFn: () => UserApi.getSession(),
 	});
 
 	const {
@@ -60,10 +68,12 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 			clientComment: data.clientComment,
 			clientName: data.clientName,
 			clientPhone: data.clientPhone,
-			clientTelegramId: String(typeof window !== 'undefined' && WebApp.initDataUnsafe.user.id),
+			//FIXME: добавить userID
+			clientTelegramId: '1',
 			masterId,
 			salonBranchId: branch.id,
-			salonId: typeof window !== 'undefined' && +WebApp.initDataUnsafe.start_param,
+			salonId: +salonId,
+			clientId: profileData.data.id,
 			servicesIdArray: services,
 			time: moment(date).hours(+time.split(':')[0]).minutes(+time.split(':')[1]).toDate(),
 		};
@@ -75,7 +85,22 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 		mutationFn: (data: ICreateBookingData) => bookingApi.create(data),
 		onSuccess: () => {
 			clear();
-			router.push('/');
+			router.push('/' + salonId);
+		},
+		onError: (error: any) => {
+			Store.addNotification({
+				title: 'Ошибка',
+				message: error.message[0],
+				type: 'danger',
+				insert: 'top',
+				container: 'top-full',
+				animationIn: ['animate__animated', 'animate__fadeIn'],
+				animationOut: ['animate__animated', 'animate__fadeOut'],
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
 		},
 	});
 
@@ -204,52 +229,20 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 				/>
 
 				<CheckBox />
+				<div className={s.controls}>
+					<Button
+						buttonParams={{ onClick: handleSubmit(onSubmit) }}
+						type={buttonTypes.blue}
+					>
+						Подтвердить запись
+					</Button>
+				</div>
 			</form>
-
-			<Controls>
-				<Button
-					buttonParams={{ onClick: handleSubmit(onSubmit) }}
-					type={buttonTypes.blue}
-				>
-					Подтвердить запись
-				</Button>
-			</Controls>
 		</div>
 	);
 };
 
-interface IInputProps {
-	placeholder?: string;
-	title?: string;
-	error?: string | null;
-	required?: boolean;
 
-	inputProps?: UseFormRegisterReturn<any>;
-	mask?: string;
-}
-
-const Input: FC<IInputProps> = ({ placeholder, title, error, required, mask, inputProps }) => {
-	return (
-		<div>
-			<span className={`${s.form_title} ${required && s.required}`}>{title}</span>
-			{mask ? (
-				<ReactInputMask
-					mask={mask}
-					required={false}
-					alwaysShowMask={false}
-					placeholder={placeholder}
-					{...inputProps}
-				/>
-			) : (
-				<input
-					placeholder={placeholder}
-					{...inputProps}
-				/>
-			)}
-			{error && <span className={s.err}>{error}</span>}
-		</div>
-	);
-};
 
 const CheckBox = () => {
 	const [isActive, setIsActive] = useState(false);

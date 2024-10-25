@@ -6,7 +6,7 @@ const envConfig = {
 
   // # dev
 
-  // API_URL: "https://beauty-back.ru.tuna.am",
+  // API_URL: "http://localhost:8888",
 }
 
 const nextConfig = {
