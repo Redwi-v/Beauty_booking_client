@@ -17,13 +17,13 @@ const data = [
 	{
 		href: '/choice.date',
 		title: 'Выбрать дату и время',
-		icon: '/icons/peoples.svg',
+		icon: '/icons/calendar.svg',
 	},
 
 	{
 		href: '/choice.service',
 		title: 'Выбрать услуги',
-		icon: '/icons/calendar.svg',
+		icon: '/icons/peoples.svg',
 	},
 ];
 

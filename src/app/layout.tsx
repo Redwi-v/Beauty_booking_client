@@ -5,6 +5,8 @@ import localFont from 'next/font/local';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactNotifications } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
+import Script from 'next/script';
+import Head from 'next/head';
 
 const roboto = Roboto({
 	subsets: ['latin'],
@@ -49,12 +51,23 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 	return (
 		<html lang='ru'>
 			<body className={`${roboto.variable} ${myFont.variable}`}>
+				<link
+					rel='stylesheet'
+					href='https://cdn.direct.i-dgtl.ru/VerifyWidget.css'
+				/>
 				<section>
 					<ReactNotifications />
 				</section>
 				<QueryClientProvider client={queryClient}>
 					<main className='content container'>{children}</main>
 				</QueryClientProvider>
+				<Script
+					src='https://cdn.direct.i-dgtl.ru/VerifyWidget.umd.min.js'
+					onLoad={() => {
+						//@ts-ignore
+						window.directIsReady = true;
+					}}
+				></Script>
 			</body>
 		</html>
 	);

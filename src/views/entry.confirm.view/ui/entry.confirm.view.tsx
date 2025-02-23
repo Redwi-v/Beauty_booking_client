@@ -1,6 +1,6 @@
 'use client';
 import { Header } from '@/widgets/header';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import s from './entry.confirm.view.module.scss';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
@@ -10,15 +10,14 @@ import { useAppointmentStore } from '@/features/appointment/model/appointment.st
 import moment from 'moment';
 import 'moment/locale/ru';
 import { useMutation, useQuery } from 'react-query';
-import { mastersApi } from '@/shared/api/masters';
 import { getFileUrl } from '@/shared/api/instance/instance';
-import { servicesApi } from '@/shared/api/services';
-import { ICreateBookingData, Service } from '@/shared/api/booking/types';
-import { SubmitHandler, useForm, UseFormRegisterReturn } from 'react-hook-form';
-import { bookingApi } from '@/shared/api';
-import ReactInputMask from 'react-input-mask';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { Store } from 'react-notifications-component';
 import { Input } from '@/shared/ui/input/ui';
+import { IMasterService, MasterApi } from '@/shared/api';
+import { ServicesApi } from '@/shared/api/services';
+import { BookingApi } from '@/shared/api/booking';
+import { ICreateBookingParams } from '@/shared/api/booking/types';
 import { UserApi } from '@/shared/api/user';
 moment.locale('ru');
 
@@ -27,6 +26,7 @@ interface IEntryConfirmViewProps {}
 type Inputs = {
 	clientComment: string;
 	clientName: string;
+	clientLastName: string;
 	clientPhone: string;
 };
 
@@ -35,56 +35,83 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 
 	const router = useRouter();
 
+	const { data: session } = useQuery({
+		queryKey: ['SESSION'],
+		queryFn: () => UserApi.getSession(),
+	});
+
 	const { salonId } = useParams();
 
 	const { clear, date, masterId, services, time, branch } = useAppointmentStore(state => state);
 
 	const { data: activeMaster } = useQuery({
 		queryKey: ['activeMaster', masterId],
-		queryFn: () => mastersApi.getOne(masterId),
+		queryFn: () => MasterApi.getOne(masterId),
 		enabled: !!masterId,
 	});
 
 	const { data: servicesData } = useQuery({
 		queryKey: ['Services'],
-		queryFn: () => servicesApi.getList(),
-	});
-
-	const { data: profileData } = useQuery({
-		queryKey: ['SESSION'],
-		queryFn: () => UserApi.getSession(),
+		queryFn: () =>
+			ServicesApi.getServicesList({
+				masterId: masterId,
+				salonId: +salonId,
+				search: '',
+			}),
 	});
 
 	const {
 		register,
 		handleSubmit,
 		watch,
+		setValue,
 		formState: { errors },
 	} = useForm<Inputs>({
 		mode: 'onChange',
 	});
+
+	useEffect(() => {
+
+		if ( session ) {
+			setValue('clientName', session.data.name)
+			setValue('clientLastName', session.data.lastName)
+			setValue('clientPhone', session.data.phoneNumber)
+		}
+
+	}, [ session ])
+
 	const onSubmit: SubmitHandler<Inputs> = data => {
-		const form: ICreateBookingData = {
-			clientComment: data.clientComment,
+		const form: ICreateBookingParams = {
+			clientComment: data.clientComment || 'нет',
 			clientName: data.clientName,
-			clientPhone: data.clientPhone,
-			//FIXME: добавить userID
-			clientTelegramId: '1',
-			masterId,
-			salonBranchId: branch.id,
-			salonId: +salonId,
-			servicesIdArray: services,
-			time: moment(date).hours(+time.split(':')[0]).minutes(+time.split(':')[1]).toDate(),
+			clientNumber: data.clientPhone,
+			clientLastName: data.clientLastName,
+			masterId: +masterId,
+			salonBranch: branch.id,
+			servicesIdArr: services,
+			duration: services.reduce((prevValue, serviceId) => {
+				const serviceInArr = servicesData.data.list.find(service => service.id === serviceId);
+				if (!serviceInArr) return prevValue;
+				const time = serviceInArr.duration + prevValue;
+
+				return time;
+			}, 0),
+			title: 'Запись ' + data.clientName,
+			description: '',
+			start: moment(date)
+				.hours(+time.split(':')[0])
+				.minutes(+time.split(':')[1])
+				.format('YYYY.MM.DD HH:mm'),
 		};
 
 		createBookingMutation.mutate(form);
 	};
 
 	const createBookingMutation = useMutation({
-		mutationFn: (data: ICreateBookingData) => bookingApi.create(data),
+		mutationFn: (data: ICreateBookingParams) => BookingApi.createBooking(data),
 		onSuccess: booking => {
 			clear();
-			router.push('/' + salonId);
+			router.push('/' + salonId + `/event/${booking.data.id}`);
 
 			const bookingArray = JSON.parse(window.localStorage.getItem('BOOKING')) || [];
 			window.localStorage.setItem('BOOKING', JSON.stringify([...bookingArray, booking.data.id]));
@@ -106,16 +133,14 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 		},
 	});
 
-	let selectedServices: Service[] = [];
+	let selectedServices: IMasterService[] = [];
 	servicesData?.data?.list?.forEach(item => {
-		item.services.forEach(service => {
-			if (services.includes(service.id)) selectedServices.push(service);
-		});
+		if (services.includes(item.id)) selectedServices.push(item);
 	});
 
 	const master = activeMaster?.data;
 	const totalMinutes = selectedServices.reduce((value, service) => {
-		return (value += service.time);
+		return (value += service.duration);
 	}, 0);
 
 	return (
@@ -209,6 +234,18 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 						...register('clientName', { required: { value: true, message: 'Поле обязательное' } }),
 					}}
 				/>
+
+				<Input
+					title='Фамилия'
+					placeholder='Введите вашу фимилию'
+					error={errors?.clientLastName?.message}
+					required
+					inputProps={{
+						...register('clientLastName', {
+							required: { value: true, message: 'Поле обязательное' },
+						}),
+					}}
+				/>
 				<Input
 					title='Телефон'
 					mask='+7 999 999 99 99'
@@ -243,8 +280,6 @@ export const EntryConfirmView: FC<IEntryConfirmViewProps> = props => {
 		</div>
 	);
 };
-
-
 
 const CheckBox = () => {
 	const [isActive, setIsActive] = useState(false);

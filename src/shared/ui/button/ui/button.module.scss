@@ -25,6 +25,16 @@
 
   }
 
+    
+  &.red {
+
+
+    background: var(--color-red);
+    color: var(--color-white);
+
+
+  }
+
   &:disabled {
 
     opacity: .6;

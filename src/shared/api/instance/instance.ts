@@ -10,6 +10,9 @@ export const apiInstance = axios.create({
 	baseURL: baseUrl,
 	timeout: 10000,
 	withCredentials: true,
+	headers: {
+		appType: 'CLIENT'
+	}
 });
 
 apiInstance.interceptors.response.use(

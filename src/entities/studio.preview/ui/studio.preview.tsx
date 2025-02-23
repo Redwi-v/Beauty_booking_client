@@ -1,38 +1,41 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import s from './studio.preview.module.scss';
-import Link from 'next/link';
-import type { IStudioPreviewInfo } from '../types/types';
 import Image from 'next/image';
-import { IGetSalonRes } from '@/shared/api/salon/types';
 import { getFileUrl } from '@/shared/api/instance/instance';
 import Select from '@/shared/ui/select/ui/select';
 import { useAppointmentStore } from '@/features/appointment/model/appointment.store';
+import { ISalon } from '@/shared/api';
+import Link from 'next/link';
 
 interface StudioPreviewProps {
-	data: IGetSalonRes;
+	data: ISalon;
+	session: any
 }
 
 export const StudioPreview: FC<StudioPreviewProps> = props => {
-	const { data } = props;
+	const { data, session } = props;
 
 	const { branch, setSalonBranch } = useAppointmentStore();
 
 	const branches = data
 		? data.branches.map(branch => ({
-				label: branch?.address?.city + ' ' + branch?.address?.address,
+				label: branch?.address,
 				value: branch?.id,
 		  }))
 		: [];
 
-		console.log(data);
+	console.log(data);
 
-		useEffect(() => {
-			if (!data?.branches || branch) return;
-			setSalonBranch(data.branches[0]);
-		}, [data]);
+	useEffect(() => {
+		if (!data?.branches || branch) return;
+		setSalonBranch(data.branches[0]);
+	}, [data]);
 
 	return (
 		<div className={`${s.link} flex flex-col items-center`}>
+			<div className={s.auth_link}>
+				<Link href={'/auth'}>{ session? 'Выйти': "Войти"  }</Link>
+			</div>
 			<Image
 				className={s.logo}
 				width={80}

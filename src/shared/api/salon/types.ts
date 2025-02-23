@@ -1,25 +1,24 @@
-export interface IGetSalonRes {
-	salonId: number;
-	salonOwnerAccountId: number;
-	name: string;
-	logoUrl: string;
-	isOpen: boolean;
-	description: string;
-	createdAt: string;
-	updatedAt: string;
-	branches: Branch[];
+export interface ISalon {
+  id: number
+  adminAccountUserId: number
+  name: string
+  logoUrl: string
+  isOpen: boolean
+  description: string
+  createdAt: string
+  updatedAt: string
+
+  branches: ISalonBranch[]
+  
 }
 
-export interface Branch {
-	id: number;
-	salonId: number;
-	masterServiceId: any;
-	address: Address;
-}
-
-export interface Address {
-	id: number;
-	city: string;
-	address: string;
-	salonBranchId: number;
+export interface ISalonBranch {
+  id: number
+  salonId: number
+  createdAt: string
+  updatedAt: string
+  isOpen: boolean
+  address: string
+  latitude: string
+  longitude: string
 }

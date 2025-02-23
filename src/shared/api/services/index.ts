@@ -1,8 +1,23 @@
-import { apiInstance } from '../instance/instance';
-import { IGetServicesListPrams, IGetServicesRes } from './types';
+import { apiInstance } from "../instance/instance"
+import { IGetListRes } from "./types"
 
-export const servicesApi = {
-	getList(params?: IGetServicesListPrams) {
-		return apiInstance.get<IGetServicesRes>('services', { params });
-	},
-};
+export const ServicesApi = {
+
+  getServicesList( params: {salonId: number, masterId: number, search: string} ) {
+
+    const {masterId, salonId, search} = params
+
+    return apiInstance.get<IGetListRes>('/services', {
+      params: {
+        masterId,
+        salonId,
+        search,
+
+        take: 1000,
+        skip: 0
+      }
+    })
+
+  }
+
+}

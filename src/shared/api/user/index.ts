@@ -1,3 +1,4 @@
+import { IBooking } from '../booking/types';
 import { apiInstance } from '../instance/instance';
 import { IRegistration } from './types';
 
@@ -11,7 +12,7 @@ export const UserApi = {
 	},
 
 	getSession() {
-		return apiInstance.get<{ id: number; email: string }>('auth/session');
+		return apiInstance.get<{ id: number; email: string, bookingList: IBooking[], name: string, lastName: string, phoneNumber: string }>('auth/session');
 	},
 
 	getProfile() {

@@ -84,8 +84,12 @@
 
   .sub_info {
 
-    padding-top: 19px;
+    padding-top: 19px !important;
     
+    h2{
+      margin-bottom: 10px;
+    }
+
     .list {
 
       list-style: disc;

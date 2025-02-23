@@ -1,3 +1,10 @@
+
+.err {
+  color: red;
+  margin-top: 5px !important;
+    display: block;
+}
+
 .content {
   input {
 
@@ -37,3 +44,34 @@
   }
 
 } 
+
+.input_wrapper {
+  display: flex;
+  position: relative;
+  
+  input {
+    padding-right: 100px;
+  }
+
+  .password_button {
+    background: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border: none;
+
+    opacity: .5;
+  }
+
+  .password_button.show_password {
+    opacity: 1 !important;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+}

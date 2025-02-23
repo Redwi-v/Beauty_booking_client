@@ -5,9 +5,10 @@ import s from './header.module.scss'
 import Image from "next/image";
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from 'react-query';
-import { salonApi } from '@/shared/api/salon';
 import { getFileUrl } from '@/shared/api/instance/instance';
 import { useAppointmentStore } from '@/features/appointment/model/appointment.store';
+import { SalonApi } from "@/shared/api";
+import Link from "next/link";
 
 interface HeaderProps {
 	withBack?: boolean;
@@ -20,7 +21,7 @@ export const Header: FC<HeaderProps> = ({ withBack }) => {
 
 	const { data } = useQuery({
 		queryKey: ['SalonData'],
-		queryFn: () => salonApi.getSalonById(+salonId),
+		queryFn: () => SalonApi.getSalonById(+salonId),
 	});
 
 	const branch = useAppointmentStore(store => store.branch);
@@ -45,21 +46,22 @@ export const Header: FC<HeaderProps> = ({ withBack }) => {
 						)}
 					</div>
 
-					<div className={`${s.main} ${withBack && s.withTop}`}>
+					<Link href={'/' + salonId} className={`${s.main} ${withBack && s.withTop}`}>
 						<div className={s.info}>
-							<h1 className='h1'>{data?.data.name}</h1>
-							<h3 className='h3'>{branch?.address?.address}</h3>
+							<h1 className='h1'>{data?.name}</h1>
+							<h3 className='h3'>{branch?.address}</h3>
 						</div>
 
 						<div className={s.avatar}>
 							<Image
 								alt='avatar'
-								src={getFileUrl(data?.data?.logoUrl)}
-								width={48}
-								height={48}
+								src={getFileUrl(data?.logoUrl)}
+								width={100}
+								height={100}
+								quality={100}
 							/>
 						</div>
-					</div>
+					</Link>
 				</header>
 			}
 		</>

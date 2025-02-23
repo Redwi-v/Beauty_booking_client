@@ -9,9 +9,9 @@ import { useAppointmentStore } from '@/features/appointment/model/appointment.st
 import { useParams, useRouter } from 'next/navigation';
 import { Button, buttonTypes } from '@/shared/ui';
 import { useQuery } from 'react-query';
-import { mastersApi } from '@/shared/api/masters';
 import { getFileUrl } from '@/shared/api/instance/instance';
 import moment from 'moment';
+import { MasterApi } from '@/shared/api';
 
 interface SpecialistsListProps {}
 
@@ -27,17 +27,19 @@ export const SpecialistsList: FC<SpecialistsListProps> = () => {
 	const { data } = useQuery({
 		queryKey: ['masters', date, time, masterId, services],
 		queryFn: () =>
-			mastersApi.getList({
+			MasterApi.getMastersList({
+				salonBranchId: branch.id,
 				salonId: +salonId,
-				date: date ? new Date(date) : undefined,
-				servicesIdList: services,
-				branchId: branch?.id,
-				time: time && moment().hours(+time.split(':')[0]).minutes(+time.split(':')[1]).toDate(),
+				search: '',
+				skip: 0,
+				take: 100,
+				date,
+				time,
 			}),
 	});
 
 	const clickHandler = () => {
-		if (!masterId) setMasterId(data.data.masters[0].id);
+		if (!masterId) setMasterId(data.list?.[0].id);
 
 		if (services.length === 0) return router.push('choice.service');
 		if (!time && !date && services.length !== 0) return router.push('choice.date');
@@ -69,8 +71,8 @@ export const SpecialistsList: FC<SpecialistsListProps> = () => {
 					/>
 				</li>
 
-				{data?.data?.masters &&
-					data.data.masters.map((item, index) => (
+				{data?.list &&
+					data.list.map((item, index) => (
 						<li
 							className={`${s.item} flex gap-20`}
 							key={index}
@@ -169,7 +171,7 @@ export const SpecialistsList: FC<SpecialistsListProps> = () => {
 							Назад
 						</Button>
 
-						{data?.data.masters.length !== 0 && (
+						{data?.list.length !== 0 && (
 							<Button
 								buttonParams={{
 									onClick: clickHandler,

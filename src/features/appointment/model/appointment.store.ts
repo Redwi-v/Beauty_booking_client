@@ -1,7 +1,7 @@
 'use client'
-import { SalonBranch } from '@/shared/api/booking/types';
+import { ISalonBranch } from '@/shared/api';
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { createJSONStorage, persist, devtools } from 'zustand/middleware';
 
 interface IAppointmentStore {
 	date: string | null;
@@ -14,12 +14,13 @@ interface IAppointmentStore {
 	toggleServices: (id: number) => void;
 	clear: () => void;
 
-	branch: SalonBranch | null;
-	setSalonBranch: (value: SalonBranch) => void;
+	branch: ISalonBranch | null;
+	setSalonBranch: (value: ISalonBranch) => void;
 }
 
 export const useAppointmentStore = create<IAppointmentStore>()(
-	persist(
+	devtools(persist(
+		
 		(set, get) => ({
 			date: get()?.date || null,
 			time: get()?.time || null,
@@ -72,7 +73,7 @@ export const useAppointmentStore = create<IAppointmentStore>()(
 			name: 'Appointment',
 			storage: createJSONStorage(() => sessionStorage),
 		},
-	),
+	)),
 );
 
 

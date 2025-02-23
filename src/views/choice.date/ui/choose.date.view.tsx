@@ -6,7 +6,7 @@ import moment from "moment";
 import { useAppointmentStore } from "@/features/appointment/model/appointment.store";
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from 'react-query';
-import { mastersApi } from '@/shared/api/masters';
+import { MasterApi } from "@/shared/api";
 
 interface ChooseDateViewProps {}
 
@@ -29,27 +29,25 @@ export const ChooseDateView: FC<ChooseDateViewProps> = () => {
 	} = useAppointmentStore(state => state);
 
 	const router = useRouter();
+	const { branch } = useAppointmentStore()
 
-	const [date, setDate] = useState(() => (stateDate ? new Date(stateDate) : new Date()));
+	const [date, setDate] = useState(() => (stateDate ? new Date(stateDate) : null));
 	const [time, setTime] = useState(stateTime || '');
-
-	const { data: freeTime } = useQuery({
-		queryKey: ['FreeTime', date, masterId, services],
-		queryFn: () =>
-			mastersApi.getFreeTime({
-				date: date,
-				masterId,
-				servicesIdList: services.map(item => String(item)),
-			}),
-	});
 
 	const { salonId } = useParams();
 
-	const { data: activeMaster } = useQuery({
-		queryKey: ['activeMaster', masterId],
-		queryFn: () => mastersApi.getOne(masterId),
-		enabled: !!masterId,
+	const { data: freeTime } = useQuery({
+		queryKey: ['FreeTime', date, masterId, services],
+		refetchOnMount: false,
+		queryFn: () =>
+			MasterApi.getSchedule(masterId, date, +branch.id, +salonId),
 	});
+
+	useEffect(() => {
+
+		if  ( !date ) setDate(new Date())
+
+	}, [  ])
 
 	useEffect(() => {
 		stateDate && setDate(() => new Date(stateDate));
@@ -70,15 +68,15 @@ export const ChooseDateView: FC<ChooseDateViewProps> = () => {
 	return (
 		<div className='container'>
 			<DatePicker
-				value={date}
+				value={date || new Date()}
 				onChange={setDate}
 				min={MIN_DATE}
 				max={MAX_DATE}
-				workingDays={activeMaster?.data?.workingDays || []}
+				workingDays={ []}
 			/>
 
 			<TimeListPicker
-				steps={freeTime?.data?.freeTime || []}
+				steps={freeTime ? freeTime.data.map(time => moment().set({hours: 0, seconds: 0, minutes: +time}).format('HH:mm'))  : []}
 				time={time}
 				setTime={setTime}
 			/>

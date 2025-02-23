@@ -4,45 +4,36 @@ import s from './booking.module.scss';
 
 import { FC } from 'react';
 import { useMutation, useQuery } from 'react-query';
-import { bookingApi } from '@/shared/api';
-import { IGetBookingListRes } from '@/shared/api/booking/types';
 import moment from 'moment';
 import { Menu, MenuItem } from '@szhsin/react-menu';
-import { UserApi } from '@/shared/api/user';
 import 'moment/locale/ru';
+import { BookingApi } from '@/shared/api/booking';
+import { IBooking } from '@/shared/api/booking/types';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 moment.locale('ru');
-interface IBookingListProps {}
+interface IBookingListProps {
+	session: { id: number, email: string, bookingList: IBooking[] }
+}
 
 export const BookingList: FC<IBookingListProps> = props => {
-	const {} = props;
-
-	const { data, refetch } = useQuery({
-		queryKey: ['BookingList'],
-		queryFn: () =>
-			bookingApi.getAllById(
-				window.localStorage.getItem('BOOKING')
-					? JSON.parse(window.localStorage.getItem('BOOKING'))
-					: [],
-			),
-	});
+	const {session} = props;
 
 	const deleteItemMutation = useMutation({
-		mutationFn: (id: number) => bookingApi.delete(id),
-		onSuccess: () => {
-			refetch();
-		},
+		mutationFn: (id: number) => BookingApi.deleteBooking(id),
+
 	});
 
 	return (
 		<div className={`${s.booking_list} container`}>
-			<div className={s.header}>
+			{ session?.id && <div className={s.header}>
 				<ClockIcon />
 				<h2>Мои записи</h2>
-			</div>
+			</div>}
 
 			<ul className={s.list}>
-				{data &&
-					data?.data.map(item => (
+				{session?.id &&
+					session?.bookingList?.map(item => (
 						<BookingItem
 							key={item.id}
 							deleteItem={deleteItemMutation.mutate}
@@ -54,18 +45,21 @@ export const BookingList: FC<IBookingListProps> = props => {
 	);
 };
 
-const BookingItem: FC<IGetBookingListRes & { deleteItem: (id: number) => void }> = props => {
-	const { master, time, services, id, deleteItem } = props;
+const BookingItem: FC<IBooking & { deleteItem: (id: number) => void }> = props => {
+	const { master, start, services, id, deleteItem } = props;
+
+	const { salonId } = useParams();
+
 
 	return (
-		<li className={s.item}>
+		<Link href={`${salonId}/event/${id}`} className={s.item}>
 			<div className={s.time_block}>
-				<span className={s.time}>{moment(time).format('HH:mm')}</span>
+				<span className={s.time}>{moment(start).format('HH:mm')}</span>
 				<span className={s.duration}>
 					{moment()
 						.minutes(0)
 						.hours(0)
-						.add({ minutes: services.reduce((prev, service) => prev + service.time, 0) })
+						.add({ minutes: services.reduce((prev, service) => prev + service.duration, 0) })
 						.format('HH:mm')}{' '}
 					ч
 				</span>
@@ -76,7 +70,7 @@ const BookingItem: FC<IGetBookingListRes & { deleteItem: (id: number) => void }>
 				<span className={s.name}>
 					{master?.name} {master?.lastName}
 				</span>
-				<span className={s.date}>{moment(time).locale('ru').format('DD MMMM YYYY (dd)')}</span>
+				<span className={s.date}>{moment(start).locale('ru').format('DD MMMM YYYY (dd)')}</span>
 			</div>
 
 			{/* <div className={s.menu}>
@@ -97,6 +91,6 @@ const BookingItem: FC<IGetBookingListRes & { deleteItem: (id: number) => void }>
 				</Menu>
 
 			</div> */}
-		</li>
+		</Link>
 	);
 };

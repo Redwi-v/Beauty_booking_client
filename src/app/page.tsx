@@ -8,12 +8,6 @@ const Page: FC<IPageProps> = props => {
 	const {} = props;
 	const router = useRouter();
 
-	useEffect(() => {
-		if (typeof window !== 'undefined' && WebApp?.initDataUnsafe) {
-			router.push(`/${WebApp.initDataUnsafe.start_param}`);
-		}
-	}, []);
-
 	return <></>;
 };
 

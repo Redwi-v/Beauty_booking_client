@@ -7,13 +7,15 @@ import { useRouter } from "next/navigation";
 
 export enum buttonTypes {
 
-  blue
+  blue,
+  red,
 
 }
 
 const buttonStyles: {[key: string]: string} = {
 
   [ buttonTypes.blue ]: s.blue,
+  [ buttonTypes.red ]: s.red,
 
 }
 

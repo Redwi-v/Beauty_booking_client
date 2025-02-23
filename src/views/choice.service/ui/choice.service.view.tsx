@@ -9,12 +9,12 @@ import { CheckBox } from '@/shared/ui/checkbox';
 import { useAppointmentStore } from '@/features/appointment/model/appointment.store';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from 'react-query';
-import { servicesApi } from '@/shared/api/services';
 import moment from 'moment';
 import useDebounce from '@/shared/scripts/hooks/use.debounce';
-import { mastersApi } from '@/shared/api/masters';
-import { Service } from '@/shared/api/booking/types';
 import { Rethink_Sans } from 'next/font/google';
+import { ServicesApi } from '@/shared/api/services';
+import { IMasterService, MasterApi } from '@/shared/api';
+import { IServiceTag } from '@/shared/api/services/types';
 
 interface ChoiceServiceViewProps {}
 
@@ -80,100 +80,48 @@ export const ChoiceServiceView: FC<ChoiceServiceViewProps> = () => {
 };
 
 const ListWithTabs = () => {
-	const { toggleServices, services, masterId, time, date } = useAppointmentStore(state => state);
+	const { toggleServices, services, masterId, time, date, branch } = useAppointmentStore(
+		state => state,
+	);
 
 	const [search, setSearch] = useState('');
+	const debounceSearch = useDebounce(search, 1000)
+
+	const { salonId } = useParams();
+
+	const { data: servicesData } = useQuery({
+		queryKey: ['SERVICES', masterId, branch.id, debounceSearch],
+		queryFn: () =>
+			ServicesApi.getServicesList({
+				masterId,
+				salonId: Array.isArray(salonId) ? undefined : +salonId,
+				search: search || undefined,
+			}),
+	});
+
+	const filteredTags: [IServiceTag, IMasterService[]][] = [];
+
+	servicesData?.data?.list?.forEach(item => {
+		const haveTabInFilterIndex = filteredTags.findIndex(filterItem => {
+			if (filterItem[0].id === item.serviceTag.id) return true;
+		});
+
+		
+		if (haveTabInFilterIndex !== -1) {
+			filteredTags[haveTabInFilterIndex][1].push(item);
+		} else {
+			filteredTags.push([item.serviceTag, [item]]);
+		}
+	});
 
 	const { data: masterData } = useQuery({
 		queryKey: ['MasterData', masterId],
-		queryFn: () => mastersApi.getOne(masterId),
+		queryFn: () => MasterApi.getOne(masterId),
 		enabled: !!masterId,
 	});
 
-	const { data, refetch } = useQuery({
-		queryKey: ['Services', masterId],
-		queryFn: () => servicesApi.getList({ search: search, masterId }),
-	});
 
-	const activeServices: Service[] = [];
 
-	services.forEach(id =>
-		data?.data?.list?.forEach(serviceTag =>
-			serviceTag.services.forEach(service => {
-				if (id === service.id) activeServices.push(service);
-			}),
-		),
-	);
-
-	const startMinutes = +time?.split(':')[0] * 60 + +time?.split(':')[1];
-
-	const isSearch = useDebounce(search, 1000);
-
-	useEffect(() => {
-		refetch();
-	}, [isSearch]);
-
-	const isNotValid = (service: Service): boolean => {
-		if (!data?.data || !masterData?.data) return;
-
-		if (!date) return false;
-
-		let haveFreeTime = false;
-
-		const maxWorkingTime =
-			+moment(masterData.data.endShift).format('HH:mm').split(':')[0] * 60 +
-			+moment(masterData.data.startShift).format('HH:mm').split(':')[1];
-
-		let bookingEndTimeSteps: [number, number][] = [];
-
-		const activeDateBooking = masterData?.data.Booking.filter(booking => {
-			return moment(date).format('DD.MM.YYYY') === moment(booking.time).format('DD.MM.YYYY');
-		});
-
-		activeDateBooking.forEach(booking => {
-			const bookingsStartTime =
-				+moment(booking.time).format('HH:mm').split(':')[0] * 60 +
-				+moment(booking.time).format('HH:mm').split(':')[1];
-
-			const bookingEndTime = booking?.services?.reduce((prev, service) => {
-				return prev + service.time;
-			}, bookingsStartTime);
-
-			bookingEndTimeSteps.push([bookingsStartTime, bookingEndTime]);
-		});
-
-		data?.data.list.forEach(tag => {
-			tag.services.forEach(serviceInTag => {
-				if (services.find(serviceId => serviceInTag.id === serviceId)) return;
-
-				const endMinutes = activeServices?.reduce((prev, service) => {
-					return prev + service.time;
-				}, startMinutes);
-
-				const plusOneMinutes = endMinutes + service.time;
-
-				if (plusOneMinutes > maxWorkingTime) {
-					haveFreeTime = false;
-				}
-
-				bookingEndTimeSteps.forEach(bookingTimeStep => {
-					if (
-						(plusOneMinutes >= bookingTimeStep[0] && plusOneMinutes <= bookingTimeStep[1]) ||
-						(startMinutes <= bookingTimeStep[0] && plusOneMinutes >= bookingTimeStep[0])
-					)
-						return;
-
-					haveFreeTime = false;
-				});
-			});
-		});
-
-		console.log(haveFreeTime);
-
-		return haveFreeTime;
-	};
-
-	const onlyTabs = data?.data?.list && data.data.list.map(service => ({ tab: service.tagName }));
 
 	return (
 		<div className={`${s.content}`}>
@@ -199,14 +147,14 @@ const ListWithTabs = () => {
 
 					<div className={s.tabs_wrapper}>
 						<div className={s.tabs}>
-							{onlyTabs &&
-								onlyTabs.map(item => (
+							{filteredTags &&
+								filteredTags.map(item => (
 									<a
-										href={'#' + item.tab}
-										key={item.tab}
+										href={'#' + item[0].name}
+										key={item[0].id}
 										className={s.tab}
 									>
-										{item.tab}
+										{item[0].name}
 									</a>
 								))}
 						</div>
@@ -215,24 +163,22 @@ const ListWithTabs = () => {
 			</div>
 
 			<div className={s.list}>
-				{data?.data?.list &&
-					data.data.list.map((item, topIndex) => (
+				{servicesData?.data?.list &&
+					filteredTags.map((item, topIndex) => (
 						<>
-							<div key={item.tagName}>
+							<div key={item[0].id}>
 								<h1
 									className='h1'
-									id={item.tagName}
+									id={item[0].name}
 								>
-									{item.tagName}
+									{item[0].name}
 								</h1>
 							</div>
 
 							<ul className='mt-20'>
-								{item.services.map((service, index) => (
+								{item[1].map((service, index) => (
 									<li
-										className={`${s.item} ${
-											isNotValid(service) && !services.includes(service.id) && s.disable_item
-										}`}
+										className={`${s.item}`}
 										key={index}
 									>
 										<p className={`${s.name} p`}>{service.name}</p>
@@ -245,7 +191,7 @@ const ListWithTabs = () => {
 													height={24}
 													alt='time'
 												/>
-												{moment().hours(0).minutes(service.time).format('HH:mm')} ч
+												{moment().hours(0).minutes(service.duration).format('HH:mm')} ч
 											</p>
 											<p className='p'>
 												<Image

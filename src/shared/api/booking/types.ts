@@ -1,79 +1,42 @@
-export interface IGetBookingListRes {
-	id: number;
-	createdAt: string;
-	updatedAt: string;
-	time: string;
-	masterAccountId: number;
-	status: string;
-	clientTelegramId: string;
-	clientName: string;
-	clientPhone: string;
-	clientComment: string;
-	salonId: number;
-	salonBranchId: number;
-	master: Master;
-	salon: Salon;
-	salonBranch: SalonBranch;
-	services: Service[];
-}
+import { IMasterService } from '../master/types';
+import { ISalon, ISalonBranch } from '../salon/types';
+import { IMasterAccount } from '../services/types';
 
-export interface Master {
-	id: number;
-	name: string;
-	lastName: string;
-	email: string;
-	salonId: number;
-	salonBranchId: number;
-	rating: number;
-	speciality: string;
-	about: string;
-	avatar: any;
-	canChangeSchedule: boolean;
-	telegramId: string;
-}
-
-export interface Salon {
-	salonId: number;
-	salonOwnerAccountId: number;
-	name: string;
-	logoUrl: string;
-	isOpen: boolean;
-	description: string;
-	createdAt: string;
-	updatedAt: string;
-}
-
-export interface SalonBranch {
-	id: number;
-	salonId: number;
-	masterServiceId: any;
-	address: {
-		address: string;
-		city: string;
-		id: number;
-		salonBranchId: number;
-	};
-}
-
-export interface Service {
-	id: number;
-	price: number;
-	time: number;
-	name: string;
-	tagName: string;
-	salonId: number;
-	bookingId: number;
-}
-
-export interface ICreateBookingData {
+export interface ICreateBookingParams {
+	// 2024.12.17 12:00
+	start: string;
+	duration: number;
+	salonBranch: number;
+	title: string;
+	description?: string;
 	masterId: number;
-	salonBranchId: number;
-	salonId: number;
-	clientId?: number;
-	clientComment: string;
-	clientPhone: string;
+	servicesIdArr: number[];
+
+	clientNumber: string;
 	clientName: string;
-	clientTelegramId: string;
-	servicesIdArray: number[];
-	time: Date;
+	clientLastName: string;
+	clientComment: string;
+
 }
+
+export interface IBooking {
+	id: number;
+	start: string;
+	duration: number;
+	title: string;
+	description: string;
+	masterAccountId: number;
+	salonId: number;
+	salonBranchId: number;
+	clientNumber: string;
+	clientName: string;
+	clientLastName: string;
+	clientComment: string;
+
+	master: IMasterAccount;
+
+	services: IMasterService[];
+	salon: ISalon;
+  salonBranch: ISalonBranch
+}
+

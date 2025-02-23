@@ -14,7 +14,6 @@ const StudioPage: NextPage<StudioPageProps> = () => {
 
     <StudioView />
 
-
   </>
 
   );

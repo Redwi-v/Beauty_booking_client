@@ -1,28 +1,37 @@
-export interface IGetServicesListPrams {
-	search?: string;
-	masterId?: number;
-}
-
-export interface IGetServicesRes {
-	list: List[];
+export interface IGetListRes {
+  count: number
+  list: List[]
 }
 
 export interface List {
-	tagName: string;
-	services: Service[];
-	_count: Count;
+  id: number
+  serviceTagId: number
+  name: string
+  price: number
+  duration: number
+  bookingId: any
+  eventsId: number
+  bookingList: any[]
+  masterAccounts: IMasterAccount[]
+  serviceTag: IServiceTag
 }
 
-export interface Service {
-	id: number;
-	price: number;
-	time: number;
-	name: string;
-	tagName: string;
-	salonId: number;
-	bookingId: number;
+export interface IMasterAccount {
+  id: number
+  salonBranchId: number
+  rating: number
+  speciality: string
+  about: string
+  name: string
+  lastName: string
+  avatar: string
+  canChangeSchedule: boolean
+  canChangeBookingTime: boolean
+  telegramId: string
 }
 
-export interface Count {
-	services: number;
+export interface IServiceTag {
+  id: number
+  salonId: number
+  name: string
 }

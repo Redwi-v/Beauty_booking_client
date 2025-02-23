@@ -6,7 +6,8 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useQuery } from 'react-query';
-import { mastersApi } from '@/shared/api/masters';
+import { MasterApi } from '@/shared/api';
+import { getFileUrl } from '@/shared/api/instance/instance';
 
 interface SpecialistPageProps {}
 
@@ -16,7 +17,7 @@ const SpecialistPage: NextPage<SpecialistPageProps> = () => {
 
 	const { data } = useQuery({
 		queryKey: ['Master', params.id],
-		queryFn: () => mastersApi.getOne(+params.id),
+		queryFn: () => MasterApi.getOne(+params.id),
 	});
 
 	return (
@@ -38,7 +39,7 @@ const SpecialistPage: NextPage<SpecialistPageProps> = () => {
 					<Image
 						width={80}
 						height={80}
-						src={'/images/no_avatar.jpg'}
+						src={getFileUrl(data.data.avatar)}
 						alt='avatar'
 					/>
 				</div>
@@ -87,7 +88,14 @@ const SpecialistPage: NextPage<SpecialistPageProps> = () => {
 				</div>
 			</div>
 
-			<div className={`${s.sub_info} container`}>{data?.data.about}</div>
+			<div className={`${s.sub_info} container`}>
+
+				<h2>О специалисте</h2>
+
+				<p className={s.sub_info__text}>
+				{data?.data.about}
+				</p>
+			</div>
 		</div>
 	);
 };
